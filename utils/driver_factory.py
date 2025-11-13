@@ -1,19 +1,15 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from selenium.webdriver.common.by import By
-from utils.constants import IMPLICIT_WAIT
-
 
 def create_driver(browser="chrome"):
-    browser = browser.lower()
-
     if browser == "chrome":
-        driver = webdriver.Chrome()
+        return webdriver.Chrome()
     elif browser == "firefox":
         driver = webdriver.Firefox()
+        return webdriver.Firefox()
     else:
-        raise ValueError("Browser must be 'chrome' or 'firefox")
+        raise ValueError("Unknown browser")
 
     driver.maximize_window()
+    driver.implicitly_wait(10)
     return driver
+
