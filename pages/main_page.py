@@ -25,13 +25,13 @@ class MainPage(BasePage):
         except TimeoutException:
             raise AttributeError("Крестик модального окна не найден")
 
-        self.wait_for_visible(MainPageLocators.MODAL_WINDOW)
+        self.wait_for_not_visible(MainPageLocators.MODAL_WINDOW)
 
     def is_ingredient_modal_opened(self):
          return self.is_visible(MainPageLocators.MODAL_WINDOW)
 
-    def is_ingredient_model_closed(self):
-        return self.wait_for_not_visible(MainPageLocators.MODAL_WINDOW, timeout=15)
+    def is_ingredient_modal_closed(self):
+        return self.wait_for_not_visible(MainPageLocators.MODAL_WINDOW )
 
     def get_ingredient_counter(self, ingredient_element):
         try:
@@ -55,4 +55,16 @@ class MainPage(BasePage):
         self.close_ingredient_modal()
         return order_number
 
+    def is_constructor_tab_displayed(self):
+        return self.is_visible(MainPageLocators.CONSTRUCTOR_TAB)
 
+    def is_orders_feed_tab_displayed(self):
+        return self.is_visible(MainPageLocators.ORDERS_FEED_TAB)
+
+    def get_bun_counter(self):
+        bun = self.find(MainPageLocators.INGREDIENT_BUN)
+        return int(self.get_ingredient_counter(bun))
+
+    def add_bun_to_constructor(self):
+        bun = self.find(MainPageLocators.INGREDIENT_BUN)
+        self.drag_to_constructor(bun)
