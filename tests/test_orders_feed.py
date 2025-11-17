@@ -1,3 +1,4 @@
+import allure
 import pytest
 from pages.login_page import LoginPage
 from pages.main_page import MainPage
@@ -6,34 +7,59 @@ from utils.constants import TEST_EMAIL, TEST_PASSWORD, BASE_URL
 from locators.locators import MainPageLocators
 import time
 
+@allure.feature("Лента заказов")
 class TestOrdersFeed:
-    def test_new_order_updates_counters_and_in_progress(self, driver):
-        driver.get(BASE_URL)
-        login = LoginPage(driver)
-        login.login(TEST_EMAIL, TEST_PASSWORD)
 
+    @allure.title("Общий счётчик увеличивается после создания заказа")
+    def test_total_counter_updates(self, driver):
         main = MainPage(driver)
+        main.open(BASE_URL)
+
+        LoginPage(driver).login(TEST_EMAIL, TEST_PASSWORD)
         main.go_to_orders_feed()
         feed = FeedPage(driver)
+
         total_before = feed.get_total_count()
-        today_before = feed.get_today_count()
-        in_progress_before = feed.get_orders_in_progress_numbers()
-
         main.go_to_constructor()
-        bun = main.find(MainPageLocators.INGREDIENT_BUN)
-        main.drag_to_constructor(bun)
-        main.click(MainPageLocators.ORDER_BUTTON)
-
-        order_number = main.wait_for_order_modal()
-        assert order_number != "", "Номер заказа не появился"
-        main.close_order_modal()
-
+        main.create_order_and_get_number()
 
         main.go_to_orders_feed()
         total_after = feed.get_total_count()
-        today_after = feed.get_today_count()
-        in_progress_after = feed.get_orders_in_progress_numbers()
 
         assert total_after >= total_before + 1
+
+    @allure.title("Счетчик 'за сегодня' увеличивается после заказа")
+    def test_today_counter_updates(self, driver):
+        main = MainPage(driver)
+        main.open(BASE_URL)
+
+        LoginPage(driver).login(TEST_EMAIL, TEST_PASSWORD)
+        main.go_to_orders_feed()
+        feed = FeedPage(driver)
+
+        today_before = feed.get_today_count()
+
+        main.go_to_constructor()
+        main.create_order_and_get_number()
+
+        main.go_to_orders_feed()
+        today_after = feed.get_today_count()
+
         assert today_after >= today_before + 1
-        assert order_number in in_progress_after
+
+
+    @allure.title("Новый заказ отображается в блоке 'В работе'")
+    def test_order_appears_in_progress(self, driver):
+        main = MainPage(driver)
+        main.open(BASE_URL)
+
+        LoginPage(driver).login(TEST_EMAIL, TEST_PASSWORD)
+
+        main.go_to_constructor()
+        order_number = main.create_order_and_get_number()
+
+        main.go_to_orders_feed()
+        feed = FeedPage(driver)
+
+        in_progress = feed.get_orders_in_progress_numbers()
+        assert order_number in in_progress

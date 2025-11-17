@@ -2,10 +2,9 @@ from selenium import webdriver
 
 def create_driver(browser="chrome"):
     if browser == "chrome":
-        return webdriver.Chrome()
+        driver = webdriver.Chrome()
     elif browser == "firefox":
         driver = webdriver.Firefox()
-        return webdriver.Firefox()
     else:
         raise ValueError("Unknown browser")
 

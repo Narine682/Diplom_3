@@ -1,1 +1,0 @@
-[33mWARNING [0m selenium.webdriver.common.selenium_manager:selenium_manager.py:143 The chromedriver version (141.0.7390.16) detected in PATH at C:\WebDriver\bin\chromedriver.exe might not be compatible with the detected chrome version (142.0.7444.135); currently, chromedriver 142.0.7444.162 is recommended for chrome 142.*, so it is advised to delete the driver in PATH and retry

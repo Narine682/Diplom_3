@@ -18,13 +18,14 @@ class MainPageLocators:
     INGREDIENT_SAUCE = (By.XPATH, "//P[text()='Соус фирменный Space Sauce']")
     INGREDIENT_MAIN = (By.XPATH, "//p[text()='Мясо бессмертных моллюсков Protostomia']")
     INGREDIENT_DETAILS_NAME = (By.XPATH, "//p[@class='text text_type_main-medium mb-8']")
-    INGREDIENT_PARENT = (By.XPATH, "./..")          # Родитель ингредиента
-    INGREDIENT_COUNTER_RELATIVE = (By.XPATH, ".//p[contains(@class, 'counter_counter_num_3nue1')]")   #Относительный счетчик ингредиента
-
+    INGREDIENT_PARENT = (By.XPATH, "./..")
+    INGREDIENT_COUNTER_RELATIVE = (By.XPATH, ".//p[contains(@class, 'counter_counter_num')]")
+    INGREDIENT_MODAL_CLOSE =(By.CSS_SELECTOR, ".Modal_modal_close_modified__3V5XS")
     #Модальное окна
-    INGREDIENT_MODAL_CLOSE = (By.CLASS_NAME, "Modal_modal_close_modified_3V5XS")
-    MODAL_OPENED_CLASS = "Modal_modal_opened_3ISs4"
-    MODAL_WINDOW = (By.XPATH, "//section[contains(@class, 'Modal_modal_opened')]")
+
+
+    MODAL_OPENED_CLASS = "Modal_modal_opened__3ISs4"
+    MODAL_WINDOW = (By.CSS_SELECTOR, "section.Modal_modal_opened__3ISw4")
     ORDER_BUTTON = (By.CSS_SELECTOR, "button.button_button_33qZ0.button_button_type_primary_107Bx.button_button_size_large_G21Vg")
 
     #Зона конструктора (куда перетаскивают)
@@ -44,7 +45,7 @@ class FeedPageLocators:
     TOTAL_COUNTER = (By.XPATH, "//p[contains(@class, 'Orderfeed_number__2MbY') and preceding-sibling::p[contains(text(), 'Выполнено за все время')]]")
     TODAY_COUNTER = (By.XPATH, "//p[contains(@class, 'Orderfeed_number__2MbY') and preceding-sibling::p[contains(text(), 'Выполнено за сегодня')]]")
     ORDER_CARDS = (By.XPATH, "//div[contains(@class, 'OrderHistory_listItem')]")
-    ORDER_IN_PROGRESS_SECTION = (By.XPATH, "//a//preceding-sibling::p[contains(text(), 'В РОБОТi')]]")
+    ORDER_IN_PROGRESS_SECTION = (By.XPATH, "//a//preceding-sibling::p[contains(text(), 'В работе')]")
     ORDERS_IN_PROGRESS = (By.XPATH, ".//li[contains(@class, 'text_type_digits-default')]")
 
 class AuthLocators:
