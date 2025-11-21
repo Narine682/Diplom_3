@@ -9,6 +9,6 @@ def create_driver(browser="chrome"):
         raise ValueError("Unknown browser")
 
     driver.maximize_window()
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(20)
     return driver
 

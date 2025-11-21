@@ -4,12 +4,11 @@ from pages.login_page import LoginPage
 from pages.main_page import MainPage
 from pages.feed_page import FeedPage
 from utils.constants import TEST_EMAIL, TEST_PASSWORD, BASE_URL
-from locators.locators import MainPageLocators
-import time
+
+
 
 @allure.feature("Лента заказов")
 class TestOrdersFeed:
-
     @allure.title("Общий счётчик увеличивается после создания заказа")
     def test_total_counter_updates(self, driver):
         main = MainPage(driver)
