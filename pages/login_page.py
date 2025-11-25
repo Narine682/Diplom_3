@@ -1,9 +1,21 @@
 from locators.locators import AuthLocators, MainPageLocators
 from pages.base_page import BasePage
-class LoginPage(BasePage):
+import allure
 
+class LoginPage(BasePage):
+    def __init__(self, driver):
+        super().__init__(driver)
+
+
+    @allure.step("Открыть форму входа")
     def open_login_form(self):
-         self.click(MainPageLocators.LOGIN_BUTTON)
+        try:
+            self.click(MainPageLocators.LOGIN_BUTTON)
+        except Exception as e:
+            element = self.find(MainPageLocators.LOGIN_BUTTON)
+            self.driver.execute_script("arguments[0].click();",element)
+
+    @allure.step("Авторизация пользователя")
     def login(self, email, password):
          self.open_login_form()
 

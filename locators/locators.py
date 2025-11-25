@@ -5,6 +5,18 @@ class MainPageLocators:
     CONSTRUCTOR_TAB = (By.XPATH, "//P[text()='Конструктор']")
     ORDERS_FEED_TAB = (By.XPATH, "//a[@href='/feed']")  
     LOGIN_BUTTON = (By.XPATH, "//button[text()='Войти в аккаунт']")
+    BURGER = (By.XPATH, "//h1[contains(@class, 'text_type_main-large') and contains(., 'Соберите бургер')]")
+    OVERLAY = (By.XPATH, "//div[@class='Modal_modal_overlay__x2ZCr']")
+    DRAG = (By.XPATH, "//section[contains(@class, 'BurgerConstructor_basket')]//span[contains(text(), 'Перетяните')]")
+    LENTA_BUT = (By.XPATH, "//a[contains(@class, 'AppHeader_header__link__3D_hX') and contains(., 'Лента Заказов')]")
+    LENTA = (By.XPATH, "//p[contains(@class, 'AppHeader_header__linkText__3q_va') and contains(., 'Лента Заказов')]")
+    CONSTR = (By.XPATH, "//p[contains(@class, 'AppHeader_header__linkText__3q_va') and contains(., 'Конструктор')]")
+    BUN = (By.XPATH, "//div[contains(@class, 'BurgerIngredient_ingredient') and contains(., 'булка')]")
+    DETAILS = (By.XPATH, "//h2[contains(@class, 'Modal_modal__title_modified')]")
+    CROSS = (By.XPATH, "//button[contains(@class, 'Modal_modal__close_modified')]")
+    BURGER_CONSTR = (By.XPATH, "//section[contains(@class, 'BurgerConstructor_basket')]")
+    COUNTER = (By.XPATH, "//p[contains(@class, 'counter_counter__num')]")
+
 
     #  разделы ингредиентов
     INGREDIENT_SECTION_BUN =(By.XPATH, "//h2[text()='Булки']")
@@ -19,7 +31,7 @@ class MainPageLocators:
 
     INGREDIENT_DETAILS_NAME = (By.XPATH, "//p[@class='text text_type_main-medium mb-8']")
     INGREDIENT_PARENT = (By.XPATH, "./..")
-    INGREDIENT_COUNTER = (By.XPATH, ".//p[@class='counter counter__num__3nue1']")
+    INGREDIENT_COUNTER = (By.XPATH, ".//p[@class='counter_counter__num__3nue1']")
 
     #  Модальное окна
     MODAL_OPENED_CLASS = "Modal_modal_opened"
@@ -41,9 +53,9 @@ class FeedPageLocators:
     """Локаторы для страницы Ленты заказов"""
 
     #   Счётчики в ленте заказов
-
-    TOTAL_COUNTER = (By.XPATH, "//p[contains(@class, 'OrderFeed_number__2PBrQ') and preceding-sibling::p[contains(text(), 'Выполнено за все время')]]")
-    TODAY_COUNTER = (By.XPATH, "//p[contains(@class, 'OrderFeed_number__2PBrQ') and preceding-sibling::p[contains(text(), 'Выполнено за сегодня')]]")
+    ORDER_LOADING_MODAL = (By.XPATH, "//div[@class='Modal_modal_opened__3ISw4 Modal_modal__P3_V5']//div[@class='Modal_modal_overlay__x2ZCr']")
+    TOTAL_COUNTER = (By.XPATH, "//p[contains(@class, 'OrderFeed_number_2MbrQ') and preceding-sibling::p[contains(text(), 'Выполнено за все время')]]")
+    TODAY_COUNTER = (By.XPATH, "//p[contains(@class, 'OrderFeed_number_2MbrQ' and preceding-sibling::p[contains(text(),'Выполнено за сегодня')]]")
 
     ORDER_CARDS = (By.XPATH, "//div[contains(@class, 'OrderHistory_listItem')]")
 
