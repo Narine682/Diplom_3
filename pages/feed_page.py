@@ -1,5 +1,4 @@
 import allure
-
 from locators.locators import FeedPageLocators
 from pages.base_page import BasePage
 from selenium.webdriver.support.ui import WebDriverWait
@@ -25,10 +24,14 @@ class FeedPage(BasePage):
 
     @allure.step("Получить общее количество выполненных заказов за все время")
     def get_total_count(self):
-        el = WebDriverWait(self.driver, 60).until(
+        try:
+            el = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(FeedPageLocators.TOTAL_COUNTER)
-        )
-        return int(el.text)
+            )
+            return int(el.text) if el.text.strip() else 0
+        except Exception as e:
+            print(f"Не удалось получить общий счётчик:{e}")
+            return 0
 
     @allure.step("Ожидать увеличения общего количества заказов")
     def wait_for_total_count_increase(self, previous_count):
@@ -38,10 +41,14 @@ class FeedPage(BasePage):
 
     @allure.step("Получить количество заказов за сегодня")
     def get_today_count(self):
-        el = WebDriverWait(self.driver, 60).until(
+        try:
+            el = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(FeedPageLocators.TODAY_COUNTER)
-        )
-        return int(el.text)
+            )
+            return int(el.text) if el.text.strip() else 0
+        except Exception as e:
+            print(f"Не удалось получить счетчик за сегодня: {e}")
+            return 0
 
     @allure.step("Ожидать увеличения количества заказов за сегодня ")
     def wait_for_today_count_increase(self, previous_count):

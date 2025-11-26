@@ -34,21 +34,12 @@ class MainPage(BasePage):
         tab = self.wait_for_clickable(MainPageLocators.CONSTRUCTOR_TAB, timeout=30)
         self.js_click(tab)
 
-    @allure.step("Закрыть затемняющий оверлей, если он появился")
-    def close_overlay_if_present(self):
-        try:
-            overlay = WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located(MainPageLocators.OVERLAY)
-            )
-            self.driver.execute_script("arguments[0].click();", overlay)
-        except:
-            pass
-
 
     @allure.step("Перейти в Ленту заказов")
     def go_to_orders_feed(self):
         tab = self.wait_for_clickable(MainPageLocators.ORDERS_FEED_TAB, timeout=30)
         self.js_click(tab)
+        self.wait_for_overlay_disappear()
 
     @allure.step("Прокрутить к разделу Булки")
     def scroll_to_bun(self):
@@ -75,7 +66,7 @@ class MainPage(BasePage):
     @allure.step("Безапасно нажать кнопку 'Оформить заказ'")
     def click_place_an_order_safe(self):
         WebDriverWait(self.driver, 30).until(
-            EC.visibility_of_element_located(FeedPageLocators.ORDER_LOADING_MODAL)
+            EC.visibility_of_element_located(MainPageLocators.OVERLAY)
         )
         self.click(MainPageLocators.PLACE_ORDER_BUTTON)
 
@@ -113,14 +104,15 @@ class MainPage(BasePage):
 
     @allure.step("Добавить булку в конструктор")
     def add_bun_to_constructor(self):
-        try:
-            self.close_overlay_if_present()
-            self.wait_for_visible_and_scroll(MainPageLocators.INGREDIENT_SECTION_BUN, timeout=30)
-            self.js_drag_and_drop(MainPageLocators.INGREDIENT_BUN, MainPageLocators.CONSTRUCTOR_DROP_AREA)
-            WebDriverWait(self.driver, 15).until(lambda d: self.get_bun_counter() >=1)
-        except Exception as e:
-            print(f"Ошибка при добавлении булки: {e}")
-            raise
+        self.close_overlay_if_present()
+        bun = WebDriverWait(self.driver, 20).until(
+            EC.element_to_be_clickable(MainPageLocators.INGREDIENT_BUN)
+        )
+        drop_area = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(MainPageLocators.CONSTRUCTOR_DROP_AREA)
+        )
+        actions = ActionChains(self.driver)
+        actions.drag_and_drop(bun, drop_area).perform()
 
     @allure.step("Создать заказ и получить номер")
     def create_order_and_get_number(self):
@@ -139,9 +131,6 @@ class MainPage(BasePage):
         self.js_click(btn)
         self.wait_for_not_visible(MainPageLocators.ORDER_MODAL, timeout=30)
 
-    @allure.step('Ожидать номер заказа')
-    def wait_for_order_number(self):
-        return self.wait_for_visible(MainPageLocators.ORDER_NUMBER).text
 
     @allure.step("Проверить, что вкладка Конструктор отображается")
     def is_constructor_tab_displayed(self):
@@ -190,7 +179,7 @@ class MainPage(BasePage):
                 source.dispatchEvent(evt);
             """, element_from, element_to)
 
-    def find_element_with_wait(self, locator, timeout=10):
+    def find_element_with_wait(self, locator, timeout=60):
         return WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator))
 
     @allure.step("Перетаскиваем все ингредиенты в конструктор")
@@ -198,13 +187,13 @@ class MainPage(BasePage):
         self.close_overlay_if_present()
 
         self.wait_for_visible_and_scroll(MainPageLocators.INGREDIENT_SECTION_BUN)
-        self.js_drag_and_drop(MainPageLocators.INGREDIENT_BUN, MainPageLocators.CONSTRUCTOR_DROP_AREA)
+        self.js_drag_and_drop(MainPageLocators.DRAGGABLE_BUN, MainPageLocators.CONSTRUCTOR_DROP_AREA)
 
         self.wait_for_visible_and_scroll(MainPageLocators.INGREDIENT_SECTION_MAIN)
-        self.js_drag_and_drop(MainPageLocators.INGREDIENT_SAUCE, MainPageLocators.CONSTRUCTOR_DROP_AREA)
+        self.js_drag_and_drop(MainPageLocators.DRAGGABLE_SAUCE, MainPageLocators.CONSTRUCTOR_DROP_AREA)
 
         self.wait_for_visible_and_scroll(MainPageLocators.INGREDIENT_SECTION_MAIN)
-        self.js_drag_and_drop(MainPageLocators.INGREDIENT_MAIN, MainPageLocators.CONSTRUCTOR_DROP_AREA)
+        self.js_drag_and_drop(MainPageLocators.DRAGGABLE_MAIN, MainPageLocators.CONSTRUCTOR_DROP_AREA)
 
     @allure.step("Ожидание обновления ингредиента")
     def wait_for_ingredient_update(self, timeout=10):
@@ -215,10 +204,6 @@ class MainPage(BasePage):
             )
         except TimeoutException:
             pass
-
-    @allure.step("Проверить состояние overlay")
-    def check_overlay_state(self):
-        self.check_overlay_start("not_visible")
 
 
     @allure.step("Нажимаем кнопку 'Оформить заказ'")
@@ -250,11 +235,17 @@ class MainPage(BasePage):
             return 0
 
     @allure.step("Проверить состояние затемняющего оверлея и закрыть его, если нужно")
-    def check_overlay_state(self):
+    def check_overlay_state(self, expected_state="not_visible"):
         try:
-            overlay = WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located(MainPageLocators.OVERLAY)
-            )
-            self.driver.execute_script("argument[0]. click();", overlay)
-        except TimeoutException:
-            pass
+            overlay = self.driver.find_element(*MainPageLocators.OVERLAY)
+            is_visible = overlay.is_displayed()
+
+            if expected_state == "visible" and not is_visible:
+                raise AttributeError("Оверлей должен быть видимым, но его нет")
+
+            if expected_state == "not_visible" and not is_visible:
+               self.close_overlay_if_present()
+
+        except Exception:
+            if expected_state == "visible":
+                raise

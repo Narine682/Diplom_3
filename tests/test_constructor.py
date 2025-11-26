@@ -51,7 +51,7 @@ class TestConstructor:
             page.check_overlay_state()
 
         with allure.step("Получаем начальное значение счётчика булки"):
-            counter_before = page.get_bun_counter("bun")
+            counter_before = page.get_bun_counter()
 
         with allure.step("Добавляем булку в конструктор"):
             page.add_bun_to_constructor()
@@ -60,7 +60,7 @@ class TestConstructor:
             counter_after = page.get_bun_counter()
 
         with allure.step("Проверяем, что счётчик увеличился на 1"):
-            assert counter_after == counter_before, (
+            assert counter_after == counter_before + 1, (
                 f"Счетчик не увеличился: было {counter_before}, стало {counter_after}")
 
 

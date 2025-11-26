@@ -110,7 +110,7 @@ class BasePage:
     @allure.step("Проверка состояния overlay")
     def check_overlay_start(self, state="visible", timeout=10):
         if state == "visible":
-            return  self.wait_for_visible(MainPageLocators.ORDER_LOADING_MODAL, timeout)
+            return self.wait_for_visible(MainPageLocators.ORDER_LOADING_MODAL, timeout)
         else:
             return self.wait_for_not_visible(MainPageLocators.ORDER_LOADING_MODAL, timeout)
 

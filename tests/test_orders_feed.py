@@ -15,6 +15,7 @@ class TestOrdersFeed:
     def test_total_counter_updates(self, driver):
         main_page = MainPage(driver)
         feed_page = FeedPage(driver)
+        LoginPage(driver)
 
         with allure.step("Открываем главную страницу"):
             main_page.open_url(BASE_URL)
@@ -30,7 +31,7 @@ class TestOrdersFeed:
             total_before = feed_page.get_total_count()
 
         with allure.step('Создаем новый заказ'):
-            main_page.drag_and_drop_ingredients()
+            main_page.drag_and_drop_ingredient()
             main_page.click_place_an_order()
             order_number = main_page.wait_for_order_number()
             main_page.close_order_modal()
@@ -83,7 +84,7 @@ class TestOrdersFeed:
         with allure.step('Создаем новый заказ'):
             main_page.drag_and_drop_ingredient()
             main_page.click_place_an_order()
-            order_number = main_page.wait_for_order_number
+            order_number = main_page.wait_for_order_number()
             main_page.close_order_modal()
 
         with allure.step("Проверяем, что заказ отображается в разделе 'В работе'"):
