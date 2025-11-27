@@ -17,6 +17,10 @@ class MainPage(BasePage):
     def open_url(self, url):
         self.driver.get(url)
 
+    @allure.step("Нажимаем кнопку 'Личный кабинет'")
+    def click_login_account_button(self):
+        self.driver.find_element(*MainPageLocators.LOGIN_ACCOUNT_BUTTON).click()
+
     @allure.step("Проверить и закрыть оверлей, если он появился")
     def check_overlay_start(self):
         try:
@@ -217,13 +221,20 @@ class MainPage(BasePage):
 
 
     @allure.step('Ожидать номер заказа')
-    def wait_for_order_number(self, timeout=30):
+    def wait_for_order_number(self, old_number=None, timeout=30):
+        """
+        Ждем появления нового номера заказа, который отличается от old_number
+        """
         try:
-            element = self.wait_for_visible(MainPageLocators.ORDER_NUMBER, timeout)
-            return element.text
-        except Exception as e:
-            print(f"Не удалось получить номер заказа:{e}")
-            return "000000"
+            def check_new_order(drv):
+                element = drv.find_element(*MainPageLocators.ORDER_NUMBER)
+                if element.text and element.text != old_number:
+                    return element.text
+                return False
+            new_order_number = WebDriverWait(self.driver, timeout).until(check_new_order)
+            return new_order_number
+        except TimeoutException:
+            raise TimeoutException("Не удалось дождаться нового номера заказа")
 
     @allure.step('Получаем счётчик булки')
     def get_bun_counter(self):

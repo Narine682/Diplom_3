@@ -15,11 +15,14 @@ class TestOrdersFeed:
     def test_total_counter_updates(self, driver):
         main_page = MainPage(driver)
         feed_page = FeedPage(driver)
-        LoginPage(driver)
+        login_page = LoginPage(driver)
 
         with allure.step("Открываем главную страницу"):
             main_page.open_url(BASE_URL)
             main_page.check_overlay_start()
+
+        with allure.step("Переходим в Личный кабинет"):
+            main_page.click_login_account_button()
 
         with allure.step("Авторизация пользователя"):
             login_page = LoginPage(driver)
@@ -48,10 +51,15 @@ class TestOrdersFeed:
         login_page = LoginPage(driver)
 
 
-        with allure.step("Открываем главную страницу и авторизуемся"):
+        with allure.step("Открываем главную страницу"):
              main_page.open_url(BASE_URL)
              main_page.check_overlay_state()
-             login_page.login(TEST_EMAIL, TEST_PASSWORD)
+
+        with allure.step("Переходим в Личный кабинет"):
+            main_page.click_login_account_button()
+
+        with allure.step("Авторизуемся"):
+            login_page.login(TEST_EMAIL, TEST_PASSWORD)
 
         with allure.step("Сохраняем текущее значение счётчика 'Выполнено сегодня'"):
              main_page.go_to_orders_feed()
@@ -67,7 +75,7 @@ class TestOrdersFeed:
              main_page.go_to_orders_feed()
              today_after = feed_page.get_today_count()
              assert today_after > today_before, (
-                     f"Счётчик 'Выполнено сегодня' не увеличился: {today_before} {today_after}")
+                     f"'Выполнено сегодня' не увеличился: {today_before} {today_after}")
 
 
     @allure.title("Новый заказ отображается в блоке 'В работе'")
@@ -79,12 +87,18 @@ class TestOrdersFeed:
         with allure.step("Открываем страницу и авторизуемся"):
             main_page.open_url(BASE_URL)
             main_page.check_overlay_start()
+
+        with allure.step("Переходим в Личный кабинет"):
+            main_page.click_login_account_button()
+
+        with allure.step("Авторизуемся"):
             login_page.login(TEST_EMAIL, TEST_PASSWORD)
 
         with allure.step('Создаем новый заказ'):
             main_page.drag_and_drop_ingredient()
             main_page.click_place_an_order()
-            order_number = main_page.wait_for_order_number()
+            old_order_number = "9999"
+            order_number = main_page.wait_for_order_number(old_number=old_order_number)
             main_page.close_order_modal()
 
         with allure.step("Проверяем, что заказ отображается в разделе 'В работе'"):

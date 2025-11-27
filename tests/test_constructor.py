@@ -59,9 +59,9 @@ class TestConstructor:
         with allure.step("Получаем значение счётчика булки после добавления"):
             counter_after = page.get_bun_counter()
 
-        with allure.step("Проверяем, что счётчик увеличился на 1"):
-            assert counter_after == counter_before + 1, (
-                f"Счетчик не увеличился: было {counter_before}, стало {counter_after}")
+        with allure.step("Проверяем, что счётчик увеличился на 2(верх и низ булки)"):
+            assert counter_after == counter_before + 2, (
+                f"Счетчик булки должен увеличиться на 2."f"было {counter_before}, стало {counter_after}")
 
 
 
